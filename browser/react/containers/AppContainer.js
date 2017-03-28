@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {Link} from 'react-router';
 
 import initialState from '../initialState';
 import AUDIO from '../audio';
+// audio is an element
 
 import Albums from '../components/Albums.js';
 import Album from '../components/Album';
@@ -16,6 +18,7 @@ export default class AppContainer extends Component {
   constructor (props) {
     super(props);
     this.state = initialState;
+    // album, selected album, current song, current song list, isPlaying, progress for progress bar
 
     this.toggle = this.toggle.bind(this);
     this.toggleOne = this.toggleOne.bind(this);
@@ -59,6 +62,7 @@ export default class AppContainer extends Component {
       currentSong: currentSong,
       currentSongList: currentSongList
     });
+    // updates the state with current song and its song list
   }
 
   startSong (song, list) {
@@ -80,14 +84,20 @@ export default class AppContainer extends Component {
 
   next () {
     this.startSong(...skip(1, this.state));
+    // skip returns an array with next song and current songlist
+    // runs next song in the song list
+
   }
 
   prev () {
     this.startSong(...skip(-1, this.state));
+    // skip returns an array with next song and current songlist
+    // runs previous song in the song list
   }
 
   setProgress (progress) {
     this.setState({ progress: progress });
+    // updates progress property for the progress bar
   }
 
   selectAlbum (albumId) {
@@ -97,32 +107,30 @@ export default class AppContainer extends Component {
         selectedAlbum: convertAlbum(album)
       }));
   }
+    // makes request to the backend for the corresponding album
 
   deselectAlbum () {
     this.setState({ selectedAlbum: {}});
   }
+  // sets selected Album to an empty object
 
   render () {
+    let prop = {album: this.state.selectedAlbum,
+    currentSong: this.state.currentSong,
+    isPlaying: this.state.isPlaying,
+    toggleOne: this.state.toggleOne,
+    albums: this.state.albums,
+    selectedAlbum: this.selectAlbum}
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
           <Sidebar deselectAlbum={this.deselectAlbum} />
         </div>
+
         <div className="col-xs-10">
-        {
-          this.state.selectedAlbum.id ?
-          <Album
-            album={this.state.selectedAlbum}
-            currentSong={this.state.currentSong}
-            isPlaying={this.state.isPlaying}
-            toggleOne={this.toggleOne}
-          /> :
-          <Albums
-            albums={this.state.albums}
-            selectAlbum={this.selectAlbum}
-          />
-        }
+          {this.props.children && React.cloneElement(this.props.children, prop)}
         </div>
+
         <Player
           currentSong={this.state.currentSong}
           currentSongList={this.state.currentSongList}
