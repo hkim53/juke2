@@ -7,7 +7,7 @@ import AUDIO from '../audio';
 // audio is an element
 
 import Albums from '../components/Albums.js';
-import Album from '../components/Album';
+import Album from '../components/Album.js';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 
@@ -120,7 +120,7 @@ export default class AppContainer extends Component {
     isPlaying: this.state.isPlaying,
     toggleOne: this.state.toggleOne,
     albums: this.state.albums,
-    selectedAlbum: this.selectAlbum}
+    selectAlbum: this.selectAlbum}
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
