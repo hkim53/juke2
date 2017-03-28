@@ -14,7 +14,6 @@ class Album extends React.Component {
 }
 
     render() {
-      console.log(this.props.routeParams)
       const album = this.props.album;
       const currentSong = this.props.currentSong;
       const isPlaying = this.props.isPlaying;
@@ -27,8 +26,8 @@ class Album extends React.Component {
             <img src={ album.imageUrl } className="img-thumbnail" />
           </div>
           <Songs
-            songs={this.props.toggle}
-            currentSong={this.props.currentSong}
+            songs={album.songs}
+            currentSong={currentSong}
             isPlaying={isPlaying}
             toggleOne={toggleOne} />
         </div>
