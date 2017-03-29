@@ -17,7 +17,7 @@ class Artist extends React.Component {
     }
 
     componentDidMount() {
-        const artistId= this.props.routeParams.artistId;
+        const artistId= this.props.routeParams.artistId;  //takes in :artistId
         const selectArtist = this.props.selectArtist;
 
         selectArtist(artistId)
@@ -25,7 +25,6 @@ class Artist extends React.Component {
 
 
     render() {
-
 
       let props = {
         currentSong: this.props.currentSong,
@@ -40,10 +39,10 @@ class Artist extends React.Component {
         return (
             <div>
                 <h3>{this.props.artist.name}</h3>
-                <Link to = {`/artists/${this.props.artist.id}/albums`}>
+                <Link to = {`/artists/${this.props.artist.id}/albums`} >
                     <h4>Albums</h4>
                 </Link>
-                <Link to = {`/artists/${this.props.artist.id}/songs`}>
+                <Link to = {`/artists/${this.props.artist.id}/songs`} >
                     <h4>Songs</h4>
                 </Link>
                 {this.props.children && React.cloneElement(this.props.children, props)}

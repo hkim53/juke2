@@ -2,18 +2,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './containers/AppContainer';
-import {Route, Router, hashHistory, Link, IndexRedirect} from 'react-router';
+import {Route, Router, browserHistory, Link, IndexRedirect} from 'react-router';
 
 import Album from './components/Album';
 import Albums from './components/Albums';
 import Artists from './components/Artists';
 import Artist from './components/Artist';
 import Songs from './components/Songs';
+import Error from './components/Error';
 
 
 
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component = {AppContainer}>
       <IndexRedirect to="/albums"/>
       <Route path="albums/:albumId" component = {Album} />
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Route path='songs' component = {Songs}/>
         <Route path='albums' component = {Albums}/>
       </Route>
+      <Route path="*" component={Error} />
     </Route>
   </Router>,
   document.getElementById('app')

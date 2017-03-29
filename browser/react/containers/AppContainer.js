@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from 'axios'; //axios: info from server
 
 import initialState from '../initialState';
 import AUDIO from '../audio';
-// audio is an element
 
 import Albums from '../components/Albums.js';
 import Album from '../components/Album.js';
@@ -17,7 +16,7 @@ export default class AppContainer extends Component {
 
   constructor (props) {
     super(props);
-    this.state = initialState;
+    this.state = initialState; //pulls from initialState.js
     // album, selected album, current song, current song list, isPlaying, progress for progress bar
 
     this.toggle = this.toggle.bind(this);
@@ -29,6 +28,7 @@ export default class AppContainer extends Component {
     this.selectArtist = this.selectArtist.bind(this);
   }
 
+//when DOM finishes loading, axios moves forth
   componentDidMount () {
     axios.all([
       axios.get('/api/albums/'),
@@ -44,6 +44,8 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
+//don't run until we use in artist component (don't run prematurely, no immediate use)
+// axios requests don't have to be in this specific order
   selectArtist(artistId) {
     axios.all([
       axios.get(`/api/artists/${artistId}`),
@@ -137,6 +139,8 @@ export default class AppContainer extends Component {
 
   render () {
 
+// props have been renamed for use in child components (below)
+// names must work with what we're given 
     let prop = {album: this.state.selectedAlbum,
     currentSong: this.state.currentSong,
     isPlaying: this.state.isPlaying,
@@ -175,3 +179,5 @@ export default class AppContainer extends Component {
     );
   }
 }
+
+// this.props.children only exists when on child route
