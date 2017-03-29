@@ -37,7 +37,7 @@ export default class AppContainer extends Component {
     .then(axios.spread((albums, artists) => {
         this.onLoad(convertAlbums(albums.data), artists.data);
     }))
-    
+
     AUDIO.addEventListener('ended', () =>
       this.next());
     AUDIO.addEventListener('timeupdate', () =>
@@ -45,10 +45,17 @@ export default class AppContainer extends Component {
   }
 
   selectArtist(artistId) {
-    axios.get(`api/artists/${artistId}`)
-      .then(res => res.data)
-      .then(artist => this.setState({
-        selectedArtist: artist
+    axios.all([
+      axios.get(`/api/artists/${artistId}`),
+      axios.get(`/api/artists/${artistId}/albums`),
+      axios.get(`/api/artists/${artistId}/songs`)
+    ])
+      .then(axios.spread((artist, albums, songs) => {
+        this.setState({
+          selectedArtist: artist.data,
+          artistAlbums: convertAlbums(albums.data),
+          artistSongs: songs.data
+        })
       }))
   }
 
@@ -127,9 +134,9 @@ export default class AppContainer extends Component {
     this.setState({ selectedAlbum: {}});
   }
   // sets selected Album to an empty object
-  
+
   render () {
-    console.log(this.state.albums)
+
     let prop = {album: this.state.selectedAlbum,
     currentSong: this.state.currentSong,
     isPlaying: this.state.isPlaying,
@@ -138,7 +145,12 @@ export default class AppContainer extends Component {
     artists: this.state.artists,
     selectAlbum: this.selectAlbum,
     artist: this.state.selectedArtist,
-    selectArtist: this.selectArtist}
+    artistAlbums: this.state.artistAlbums,
+    artistSongs: this.state.artistSongs,
+    selectArtist: this.selectArtist
+    }
+
+    // artist: this.state.selectedArtist,
 
     return (
       <div id="main" className="container-fluid">
