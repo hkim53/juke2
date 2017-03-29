@@ -14,6 +14,7 @@ class Album extends React.Component {
 }
 
     render() {
+      console.log(artist);
       const album = this.props.album;
       const currentSong = this.props.currentSong;
       const isPlaying = this.props.isPlaying;

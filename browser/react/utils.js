@@ -3,6 +3,7 @@ export const convertSong = (song) => {
   return song;
 };
 
+// sets url for album
 export const convertAlbum = (album) => {
   album.imageUrl = `/api/albums/${album.id}/image`;
   album.songs = album.songs.map(convertSong);

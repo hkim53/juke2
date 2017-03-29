@@ -10,6 +10,7 @@ import Album from '../components/Album.js';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 
+
 import { convertAlbum, convertAlbums, skip } from '../utils';
 
 export default class AppContainer extends Component {
@@ -25,22 +26,36 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
+    this.selectArtist = this.selectArtist.bind(this);
   }
 
   componentDidMount () {
-    axios.get('/api/albums/')
-      .then(res => res.data)
-      .then(album => this.onLoad(convertAlbums(album)));
-
+    axios.all([
+      axios.get('/api/albums/'),
+      axios.get('/api/artists/')
+    ])
+    .then(axios.spread((albums, artists) => {
+        this.onLoad(convertAlbums(albums.data), artists.data);
+    }))
+    
     AUDIO.addEventListener('ended', () =>
       this.next());
     AUDIO.addEventListener('timeupdate', () =>
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad (albums) {
+  selectArtist(artistId) {
+    axios.get(`api/artists/${artistId}`)
+      .then(res => res.data)
+      .then(artist => this.setState({
+        selectedArtist: artist
+      }))
+  }
+
+  onLoad (albums, artists) {
     this.setState({
-      albums: albums
+      albums: albums,
+      artists: artists
     });
   }
 
@@ -112,14 +127,19 @@ export default class AppContainer extends Component {
     this.setState({ selectedAlbum: {}});
   }
   // sets selected Album to an empty object
-
+  
   render () {
+    console.log(this.state.albums)
     let prop = {album: this.state.selectedAlbum,
     currentSong: this.state.currentSong,
     isPlaying: this.state.isPlaying,
     toggleOne: this.state.toggleOne,
     albums: this.state.albums,
-    selectAlbum: this.selectAlbum}
+    artists: this.state.artists,
+    selectAlbum: this.selectAlbum,
+    artist: this.state.selectedArtist,
+    selectArtist: this.selectArtist}
+
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
